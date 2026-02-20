@@ -4,46 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Particle Life Simulation</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        header { background: #282c34; color: white; padding: 20px; text-align: center; }
-        h1 { margin: 0; }
-        section { padding: 20px; }
-        .features { list-style-type: none; padding: 0; }
-        footer { text-align: center; padding: 20px; background: #f1f1f1; }
-        a { color: #61dafb; text-decoration: none; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        .description {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .links {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        .links a {
+            margin: 0 15px;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #35424a;
+            color: white;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .links a:hover {
+            background: #5a6c72;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Particle Life Simulation</h1>
+        <h1>Welcome to Particle Life Simulation</h1>
     </header>
-    <section>
-        <h2>About the Project</h2>
-        <p>This project simulates the behavior of particles in a controlled environment. It allows users to explore various dynamics of particle interactions and movements.</p>
-
-        <h2>Controls</h2>
-        <p>You can control the simulation with the following keys:</p>
-        <ul>
-            <li>Space: Start/Pause the simulation</li>
-            <li>Arrow Keys: Move particles</li>
-            <li>R: Reset the simulation</li>
-        </ul>
-
-        <h2>Features</h2>
-        <ul class="features">
-            <li>Real-time particle interaction</li>
-            <li>Customizable parameters</li>
-            <li>Visual effects</li>
-        </ul>
-
-        <h2>Links</h2>
-        <p><a href="https://github.com/Magiccat8680/Particle-Life-Simulation">View on GitHub</a></p>
-        <p><a href="https://github.com/Magiccat8680/Particle-Life-Simulation/releases">Download the latest release</a></p>
-    </section>
-    <footer>
-        <p>&copy; 2026 Particle Life Simulation Team</p>
-    </footer>
+    <div class="container">
+        <div class="description">
+            <h2>Project Description</h2>
+            <p>This Particle Life Simulation project allows users to explore the life cycle of particles in a dynamic and interactive environment. Through various simulations, you can witness how particles behave based on different parameters.</p>
+        </div>
+        <div class="controls">
+            <h2>Controls Information</h2>
+            <p>Use the following controls to interact with the simulation:</p>
+            <ul>
+                <li><strong>W</strong> - Increase speed</li>
+                <li><strong>S</strong> - Decrease speed</li>
+                <li><strong>A</strong> - Spawn new particles</li>
+                <li><strong>D</strong> - Remove particles</li>
+            </ul>
+        </div>
+        <div class="links">
+            <a href="https://github.com/Magiccat8680/Particle-Life-Simulation/releases" target="_blank">Download</a>
+            <a href="https://github.com/Magiccat8680/Particle-Life-Simulation" target="_blank">GitHub</a>
+        </div>
+    </div>
 </body>
 </html>
