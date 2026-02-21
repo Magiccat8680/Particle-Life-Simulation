@@ -3,114 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Particle Life Simulation</title>
+    <title>HTML5 Particle Life Simulation</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { background: #222; }
-        #settings { position: absolute; color: white; top: 10px; left: 10px; }
+        body { font-family: Arial, sans-serif; }
+        #canvas { border: 1px solid black; }
+        #controls { margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <div id="settings">
-        <label for="particleCount">Particle Count: <input type="number" id="particleCount" value="100" /></label><br>
-        <label for="attractionStrength">Attraction Strength: <input type="range" id="attractionStrength" min="0" max="10" value="3" /></label><br>
-        <label for="repulsionStrength">Repulsion Strength: <input type="range" id="repulsionStrength" min="0" max="10" value="3" /></label><br>
-        <label for="speed">Speed Multiplier: <input type="range" id="speed" min="1" max="10" value="5" /></label><br>
-        <label for="interactionRange">Interaction Range: <input type="range" id="interactionRange" min="10" max="200" value="50" /></label>
+    <h1>HTML5 Particle Life Simulation</h1>
+    <div id="controls">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <label for="particleCount">Particle Count:</label>
+        <input type="number" id="particleCount" value="100" min="1">
     </div>
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="stats">
+        <h2>Statistics</h2>
+        <p id="displayStats">Particles Active: 0</p>
+    </div>
     <script>
-
-        // Particle class
-        class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.vx = Math.random() * 2 - 1;
-                this.vy = Math.random() * 2 - 1;
-                this.radius = 5;
-            }
-            update(particles) {
-                for (let other of particles) {
-                    const dx = other.x - this.x;
-                    const dy = other.y - this.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < interactionRange.value) {
-                        const force = attractionStrength.value / (dist / 100) - repulsionStrength.value;
-                        this.vx += (dx / dist) * force;
-                        this.vy += (dy / dist) * force;
-                    }
-                }
-                this.x += this.vx * speed.value / 10;
-                this.y += this.vy * speed.value / 10;
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            render(context) {
-                context.beginPath();
-                context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                context.fillStyle = 'white';
-                context.fill();
-            }
-        }
-
-        const canvas = document.getElementById("canvas");
-        const context = canvas.getContext("2d");
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCountElement = document.getElementById("particleCount");
+        let isRunning = false;
+        let animationFrameId;
 
-        function setupParticles() {
-            particles = [];
-            for (let i = 0; i < particleCountElement.value; i++) {
-                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+        function Particle(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = Math.random() * 5 + 1;
+            this.color = 'rgba(255, 255, 255,' + Math.random() + ')';
+        }
+
+        function createParticles(count) {
+            for (let i = 0; i < count; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particles.push(new Particle(x, y));
             }
         }
 
-        function draw() {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            for (let particle of particles) {
-                particle.update(particles);
-                particle.render(context);
-            }
-            requestAnimationFrame(draw);
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                p.x += (Math.random() - 0.5) * 2;
+                p.y += (Math.random() - 0.5) * 2;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+            });
+            document.getElementById('displayStats').innerText = 'Particles Active: ' + particles.length;
+            animationFrameId = requestAnimationFrame(render);
         }
 
-        document.addEventListener("keydown", (event) => {
-            if (event.code === "Space") {
-                if (isPaused) {
-                    draw();
-                    isPaused = false;
-                } else {
-                    isPaused = true;
-                }
-            }
-            if (event.code === "F2") {
-                setupParticles();
-            }
-            if (event.code === "F11") {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    }
-                }
-            }
-        });
+        document.getElementById('start').onclick = () => {
+            const count = document.getElementById('particleCount').value;
+            createParticles(count);
+            isRunning = true;
+            render();
+        };
 
-        let isPaused = false;
-
-        particleCountElement.addEventListener("change", setupParticles);
-        window.addEventListener("resize", () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        setupParticles();
-        draw();
+        document.getElementById('stop').onclick = () => {
+            isRunning = false;
+            cancelAnimationFrame(animationFrameId);
+        };
 
     </script>
+    <p>Refer to <a href="https://github.com/OfficialCodeNoodles/Particle-Life-Simulation">OfficialCodeNoodles/Particle-Life-Simulation</a> for more details.</p>
 </body>
 </html>
